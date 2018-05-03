@@ -111,6 +111,8 @@
   shell: 'grep -ir nopasswd /etc/sudoers /etc/sudoers.d/ | egrep -v "^([[:space:]]*)?(#|$)" || echo "not found"'
   register: sudoers_nopasswd_check
   changed_when: False
+  when:
+    - security_sudoers_nopasswd_check_enable | bool
   tags:
     - auth
     - medium
@@ -123,6 +125,7 @@
       Remove the directive to ensure that all users must provide a password to
       run commands as the root user.
   when:
+    - security_sudoers_nopasswd_check_enable | bool
     - not sudoers_nopasswd_check | skipped
     - sudoers_nopasswd_check.stdout != 'not found'
   tags:
